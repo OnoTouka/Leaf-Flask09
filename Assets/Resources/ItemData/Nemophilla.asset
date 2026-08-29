@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
+  m_Name: Nemophilla
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemID: 5
+  itemName: "\u30CD\u30E2\u30D5\u30A3\u30E9"
+  description: "\u4E3B\u4EBA\u516C\u306E\u8A95\u751F\u82B1"
+  iconPrefab: {fileID: 7448899271193075323, guid: 81fd6cbcdc74e144395c36aae455db72, type: 3}
+  illustrationPrefab: {fileID: 4551304567201747941, guid: d1a591bd5ed274b4eb620f4640b6d408, type: 3}
+  minAmount: 1
+  maxAmount: 3
