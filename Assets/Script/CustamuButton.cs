@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -40,7 +41,8 @@ public class CustamuButton : MonoBehaviour,
         SceneChange,
         StartGame,
         OpenDialog,
-        CloseDialog
+        CloseDialog,
+        Exit
     }
 
     [SerializeField]
@@ -175,7 +177,7 @@ public class CustamuButton : MonoBehaviour,
             case ButtonAction.StartGame:
 
                 GameManager.Instance.ResetHP();
-
+                GameManager.Instance.ResetSP();
                 SceneManager.LoadScene(
                     sceneName
                 );
@@ -192,6 +194,14 @@ public class CustamuButton : MonoBehaviour,
 
                 CloseDialog();
 
+                break;
+
+            case ButtonAction.Exit:
+#if UNITY_EDITOR
+                EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
                 break;
 
             case ButtonAction.None:

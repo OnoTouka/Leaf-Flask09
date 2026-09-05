@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
   m_Name: Nigella
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 4
+  itemID: 7
   itemName: "\u30CB\u30B2\u30E9"
   description: "\u5E2B\u5320\u306E\u8A95\u751F\u65E5\u82B1\u3089\u3057\u3044"
   iconPrefab: {fileID: 5691155299289232963, guid: 5c030624dfabdc44ca1ff644f07bdef5, type: 3}

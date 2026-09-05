@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
   m_Name: Tulip
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 1
+  itemID: 10
   itemName: "\u30C1\u30E5\u30FC\u30EA\u30C3\u30D7"
   description: "\u82B1\u8A00\u8449\n\u300C\u611B\u306E\u544A\u767D\u300D\u300C\u7F8E\u3057\u3044\u77B3\u300D\u300C\u601D\u3044\u3084\u308A\u300D\u300C\u535A\u611B\u300D\u306A\u3069"
   iconPrefab: {fileID: 7619050705016704018, guid: 89d7eaacf8ad86a49a2967c783787827, type: 3}

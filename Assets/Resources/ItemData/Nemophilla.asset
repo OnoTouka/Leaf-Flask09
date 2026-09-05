@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
   m_Name: Nemophilla
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 5
+  itemID: 6
   itemName: "\u30CD\u30E2\u30D5\u30A3\u30E9"
   description: "\u4E3B\u4EBA\u516C\u306E\u8A95\u751F\u82B1"
   iconPrefab: {fileID: 7448899271193075323, guid: 81fd6cbcdc74e144395c36aae455db72, type: 3}

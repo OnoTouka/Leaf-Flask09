@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
   m_Name: Basil
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 0
-  itemName: 
-  description: 
-  iconPrefab: {fileID: 0}
-  illustrationPrefab: {fileID: 0}
+  itemID: 1
+  itemName: "\u30D0\u30B8\u30EB"
+  description: "\u9999\u308A\u304C\u3088\u3044"
+  iconPrefab: {fileID: 2656356222027789293, guid: e0fe15a2dd3221b4a990539cd09d589f, type: 3}
+  illustrationPrefab: {fileID: 8514358989741983450, guid: af63c31642183304184a03196c42b174, type: 3}
   minAmount: 1
   maxAmount: 3

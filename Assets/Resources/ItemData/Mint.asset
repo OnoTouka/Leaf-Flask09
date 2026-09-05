@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
   m_Name: Mint
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 6
+  itemID: 5
   itemName: "\u30DF\u30F3\u30C8"
   description: "\u30DF\u30F3\u30C8\u304C\u5148\u304B\u6B6F\u78E8\u304D\u7C89\u304C\u5148\u304B\u3002"
   iconPrefab: {fileID: 4575273323018541139, guid: 7f3ff584cb323d340a8d5f7d22561979, type: 3}

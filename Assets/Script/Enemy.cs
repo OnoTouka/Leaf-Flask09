@@ -20,7 +20,10 @@ public class Enemy : MonoBehaviour
     public void HitByBullet()
     {
         // 敵全体HPを減らす
-        BattleManager.Instance.DamageEnemy(battleDamage);
+        if (BattleManager.Instance != null)
+        {
+            BattleManager.Instance.DamageEnemy(battleDamage);
+        }
 
         Destroy(gameObject);
     }
@@ -30,8 +33,12 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("BattleArea"))
         {
             // プレイヤーにダメージ
-            BattleManager.Instance.DamagePlayer(playerDamage);
+            if (BattleManager.Instance != null)
+            {
+                BattleManager.Instance.DamagePlayer(playerDamage);
+            }
 
+            // 敵を削除
             Destroy(gameObject);
         }
     }

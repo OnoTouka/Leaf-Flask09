@@ -944,7 +944,7 @@ MonoBehaviour:
   background: {fileID: 1583956141}
   backgroundScale: 1.1
   scaleTime: 0.3
-  nextSceneName: Title
+  nextSceneName: Battle
 --- !u!1 &1901082009
 GameObject:
   m_ObjectHideFlags: 0

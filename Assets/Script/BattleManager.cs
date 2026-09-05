@@ -99,7 +99,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene("ExplorationScene");
+            SceneManager.LoadScene("SearchScene");
         }
     }
 

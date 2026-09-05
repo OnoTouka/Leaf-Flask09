@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
   m_Name: Rosemary
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 3
+  itemID: 8
   itemName: "\u30ED\u30FC\u30BA\u30DE\u30EA\u30FC"
   description: "\u3042\u3042\u3042\u3042\u3042\u3042\u3042"
   iconPrefab: {fileID: 2175039990676527009, guid: 9fc9181912fbea9418426fc33189d606, type: 3}

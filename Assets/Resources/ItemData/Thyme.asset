@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996d36f0695dbf42970012429622b88, type: 3}
   m_Name: Thyme
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemID: 2
+  itemID: 9
   itemName: "\u30BF\u30A4\u30E0"
   description: "\u3042\u3042\u3042\u3042"
   iconPrefab: {fileID: 3561545600343347456, guid: fc387fb1010688a47bc09c175cfc53ac, type: 3}

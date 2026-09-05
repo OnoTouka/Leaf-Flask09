@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public int currentHP;
 
     [Header("Player SP")]
-    public int maxSP = 100;
+    public int maxSP = 10;
     public int currentSP;
 
     // バトル開始時のSP
@@ -59,6 +59,12 @@ public class GameManager : MonoBehaviour
     {
         currentSP -= amount;
         currentSP = Mathf.Clamp(currentSP, 0, maxSP);
+    }
+
+    // SPを最大値に戻す
+    public void ResetSP()
+    {
+        currentSP = maxSP;
     }
 
     // バトル開始時のSPを記録
