@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cdab1aaaba0df464d8c365863fb6d4d5, type: 2}
   m_sharedMaterial: {fileID: -9158455599544329614, guid: cdab1aaaba0df464d8c365863fb6d4d5, type: 2}
@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.25
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -303,7 +303,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemSlotUI
   iconParent: {fileID: 7307728822629812033}
-  detailUI: {fileID: 8222910591428241261, guid: 180707aa0c4fc124798373d8bd30aac7, type: 3}
 --- !u!114 &3758673638050541540
 MonoBehaviour:
   m_ObjectHideFlags: 0

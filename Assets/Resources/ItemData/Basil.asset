@@ -19,3 +19,5 @@ MonoBehaviour:
   illustrationPrefab: {fileID: 8514358989741983450, guid: af63c31642183304184a03196c42b174, type: 3}
   minAmount: 1
   maxAmount: 3
+  minDepth: 0
+  maxDepth: 5

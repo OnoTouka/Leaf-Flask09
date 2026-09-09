@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -33,7 +34,26 @@ public class BattleManager : MonoBehaviour
         defeatMessage.SetActive(false);
     }
 
-    // 敵全体にダメージ
+    private void Update()
+    {
+        // 開発用・裏コマンド：Shift + W
+        if (Keyboard.current.shiftKey.isPressed &&
+            Keyboard.current.wKey.wasPressedThisFrame)
+        {
+            SkipBattle();
+        }
+    }
+
+    private void SkipBattle()
+    {
+        if (battleEnded)
+            return;
+
+        Debug.Log("裏コマンド：バトルをスキップしました");
+
+        BattleVictory();
+    }
+
     public void DamageEnemy(int damage)
     {
         if (battleEnded)
@@ -44,14 +64,10 @@ public class BattleManager : MonoBehaviour
         if (currentEnemyHP < 0)
             currentEnemyHP = 0;
 
-        // 敵HPが0
         if (currentEnemyHP <= 0)
-        {
             BattleVictory();
-        }
     }
 
-    // プレイヤーがダメージを受けた
     public void DamagePlayer(int damage)
     {
         if (battleEnded)
@@ -59,11 +75,8 @@ public class BattleManager : MonoBehaviour
 
         GameManager.Instance.TakeDamage(damage);
 
-        // プレイヤーHPが0
         if (GameManager.Instance.currentHP <= 0)
-        {
             BattleDefeat();
-        }
     }
 
     private void BattleVictory()
@@ -72,6 +85,8 @@ public class BattleManager : MonoBehaviour
             return;
 
         battleEnded = true;
+
+        StopEnemySpawner();
 
         StartCoroutine(VictorySequence());
     }
@@ -83,6 +98,11 @@ public class BattleManager : MonoBehaviour
 
         battleEnded = true;
 
+        if (GameManager.Instance != null)
+            GameManager.Instance.SetBattleDefeat();
+
+        StopEnemySpawner();
+
         StartCoroutine(DefeatSequence());
     }
 
@@ -92,7 +112,6 @@ public class BattleManager : MonoBehaviour
 
         yield return new WaitForSeconds(resultMessageTime);
 
-        // バトル開始時SPが0
         if (GameManager.Instance.battleStartSP <= 0)
         {
             SceneManager.LoadScene("ResultScene");
@@ -110,5 +129,16 @@ public class BattleManager : MonoBehaviour
         yield return new WaitForSeconds(resultMessageTime);
 
         SceneManager.LoadScene("ResultScene");
+    }
+
+    private void StopEnemySpawner()
+    {
+        EnemySpawner spawner =
+            FindFirstObjectByType<EnemySpawner>();
+
+        if (spawner != null)
+        {
+            spawner.StopSpawning();
+        }
     }
 }

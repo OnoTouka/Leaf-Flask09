@@ -18,4 +18,6 @@ MonoBehaviour:
   iconPrefab: {fileID: 5691155299289232963, guid: 5c030624dfabdc44ca1ff644f07bdef5, type: 3}
   illustrationPrefab: {fileID: 2044354410895457547, guid: 7f2bfc0ddd1b2c3489aa744e91deae19, type: 3}
   minAmount: 1
-  maxAmount: 3
+  maxAmount: 1
+  minDepth: 8
+  maxDepth: 9

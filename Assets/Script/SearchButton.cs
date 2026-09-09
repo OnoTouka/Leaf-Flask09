@@ -80,7 +80,11 @@ public class SearchButton : MonoBehaviour,
             transform.localScale;
     }
 
+
+    // =====================================================
     // Hover
+    // =====================================================
+
     public void OnPointerEnter(
         PointerEventData eventData)
     {
@@ -96,7 +100,11 @@ public class SearchButton : MonoBehaviour,
             originalScale;
     }
 
+
+    // =====================================================
     // Down
+    // =====================================================
+
     public void OnPointerDown(
         PointerEventData eventData)
     {
@@ -104,9 +112,13 @@ public class SearchButton : MonoBehaviour,
             originalScale * pressScale;
     }
 
+
+    // =====================================================
     // Up
+    // =====================================================
+
     public void OnPointerUp(
-        PointerEventData eventData)
+    PointerEventData eventData)
     {
         transform.localScale =
             originalScale;
@@ -116,6 +128,13 @@ public class SearchButton : MonoBehaviour,
         if (!UseActionPoint())
         {
             return;
+        }
+
+
+        // クリック成功時のSE
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE("Select");
         }
 
 
@@ -136,7 +155,11 @@ public class SearchButton : MonoBehaviour,
         }
     }
 
+
+    // =====================================================
     // SP消費
+    // =====================================================
+
     private bool UseActionPoint()
     {
         if (GameManager.Instance == null)
@@ -149,7 +172,10 @@ public class SearchButton : MonoBehaviour,
         }
 
 
+        // -------------------------------------------------
         // SPが足りない
+        // -------------------------------------------------
+
         if (GameManager.Instance.currentSP <
             actionCost)
         {
@@ -160,6 +186,10 @@ public class SearchButton : MonoBehaviour,
             return false;
         }
 
+
+        // -------------------------------------------------
+        // SPを消費
+        // -------------------------------------------------
 
         GameManager.Instance.SubtractSP(
             actionCost
@@ -175,21 +205,14 @@ public class SearchButton : MonoBehaviour,
         );
 
 
-        // SPが0になった
-        if (GameManager.Instance.currentSP <= 0)
-        {
-            SceneManager.LoadScene(
-                "ResultScene"
-            );
-
-            return false;
-        }
-
-
         return true;
     }
 
+
+    // =====================================================
     // アイテム獲得
+    // =====================================================
+
     private void GetRandomItem()
     {
         ItemList itemList =
@@ -220,8 +243,16 @@ public class SearchButton : MonoBehaviour,
                 amount
             );
         }
+
+
+        // SPが0になったらResultScene
+        CheckSPZero();
     }
 
+
+    // =====================================================
+    // 獲得アイテム表示
+    // =====================================================
 
     private void ShowObtainedItem(
         ItemData item,
@@ -271,9 +302,26 @@ public class SearchButton : MonoBehaviour,
         textCoroutine = null;
     }
 
-    // 背景探索
+
+    // =====================================================
+    // 奥へ進む
+    // =====================================================
+
     private void SearchBackground()
     {
+        // 探索深度を1進める
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.explorationDepth++;
+
+
+            Debug.Log(
+                "探索深度：" +
+                GameManager.Instance.explorationDepth
+            );
+        }
+
+
         float random =
             Random.Range(
                 0f,
@@ -290,12 +338,46 @@ public class SearchButton : MonoBehaviour,
         }
         else
         {
+            CheckSPZero();
+
+
+            if (GameManager.Instance != null &&
+                GameManager.Instance.currentSP > 0)
+            {
+                if (!string.IsNullOrEmpty(
+                    nextSceneName))
+                {
+                    SceneManager.LoadScene(
+                        nextSceneName
+                    );
+                }
+            }
+        }
+    }
+
+
+    // =====================================================
+    // SPが0か確認
+    // =====================================================
+
+    private void CheckSPZero()
+    {
+        if (GameManager.Instance == null)
+            return;
+
+
+        if (GameManager.Instance.currentSP <= 0)
+        {
             SceneManager.LoadScene(
-                nextSceneName
+                "ResultScene"
             );
         }
     }
 
+
+    // =====================================================
+    // 背景を拡大
+    // =====================================================
 
     private IEnumerator ScaleBackground()
     {
@@ -304,6 +386,8 @@ public class SearchButton : MonoBehaviour,
             Debug.LogWarning(
                 "Backgroundが設定されていません"
             );
+
+            CheckSPZero();
 
             yield break;
         }
@@ -320,6 +404,10 @@ public class SearchButton : MonoBehaviour,
 
         float time = 0f;
 
+
+        // -------------------------------------------------
+        // 拡大
+        // -------------------------------------------------
 
         while (time < scaleTime)
         {
@@ -345,6 +433,10 @@ public class SearchButton : MonoBehaviour,
         time = 0f;
 
 
+        // -------------------------------------------------
+        // 元に戻す
+        // -------------------------------------------------
+
         while (time < scaleTime)
         {
             time += Time.deltaTime;
@@ -368,5 +460,9 @@ public class SearchButton : MonoBehaviour,
 
         background.localScale =
             originalBackgroundScale;
+
+
+        // SPが0なら終了
+        CheckSPZero();
     }
 }

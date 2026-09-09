@@ -56,97 +56,39 @@ public class ItemDetailUI : MonoBehaviour
     // アイテム詳細を表示
     // =====================================================
 
-    public void ShowItem(
-        ItemData item,
-        int amount)
+    public void ShowItem(ItemData item, int amount)
     {
         if (item == null)
         {
-            Debug.LogWarning(
-                "ItemDataがありません"
-            );
-
+            Debug.LogWarning("ItemDataがありません");
             return;
         }
 
-
-        // =================================================
-        // ダイアログを表示
-        // =================================================
-
         gameObject.SetActive(true);
-
-
-        // =================================================
-        // アイテム名
-        // =================================================
+        transform.localScale = Vector3.one;
 
         if (itemNameText != null)
-        {
-            itemNameText.text =
-                item.itemName;
-        }
-
-
-        // =================================================
-        // アイテムID
-        // =================================================
+            itemNameText.text = item.itemName;
 
         if (idText != null)
-        {
-            idText.text =
-                item.itemID.ToString();
-        }
-
-
-        // =================================================
-        // 個数
-        // =================================================
+            idText.text = item.itemID.ToString();
 
         if (amountText != null)
-        {
-            amountText.text =
-                amount.ToString();
-        }
-
-
-        // =================================================
-        // 説明
-        // =================================================
+            amountText.text = amount.ToString();
 
         if (descriptionText != null)
-        {
-            descriptionText.text =
-                item.description;
-        }
-
-
-        // =================================================
-        // 古いイラストを削除
-        // =================================================
+            descriptionText.text = item.description;
 
         if (illustrationParent != null)
         {
-            foreach (
-                Transform child
-                in illustrationParent
-            )
+            foreach (Transform child in illustrationParent)
             {
-                Destroy(
-                    child.gameObject
-                );
+                Destroy(child.gameObject);
             }
         }
 
-
-        // =================================================
-        // 詳細画面用イラストを生成
-        // =================================================
-
-        if (
-            item.illustrationPrefab != null &&
-            illustrationParent != null
-        )
+        if (item.illustrationPrefab != null &&
+            illustrationParent != null)
         {
             GameObject illustration =
                 Instantiate(
@@ -154,27 +96,14 @@ public class ItemDetailUI : MonoBehaviour
                     illustrationParent
                 );
 
-
-            // =================================================
-            // RectTransform調整
-            // =================================================
-
             RectTransform rect =
-                illustration.GetComponent<
-                    RectTransform
-                >();
-
+                illustration.GetComponent<RectTransform>();
 
             if (rect != null)
             {
-                rect.localPosition =
-                    Vector3.zero;
-
-                rect.localRotation =
-                    Quaternion.identity;
-
-                rect.localScale =
-                    Vector3.one;
+                rect.localPosition = Vector3.zero;
+                rect.localRotation = Quaternion.identity;
+                rect.localScale = Vector3.one;
             }
         }
         else

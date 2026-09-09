@@ -21,6 +21,13 @@ public class ItemIconButton :
     public void OnPointerClick(
         PointerEventData eventData)
     {
+        // アイコンをクリックしたときのSE
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE("Select");
+        }
+
+
         Debug.Log(
             "アイコンをクリックしました：" +
             item.itemName
@@ -52,4 +59,6 @@ public class ItemIconButton :
             amount
         );
     }
+
+
 }

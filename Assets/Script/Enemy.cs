@@ -32,6 +32,12 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("BattleArea"))
         {
+            // 敵がプレイヤーエリアに入ったSE
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySE("Hit",1.2f);
+            }
+
             // プレイヤーにダメージ
             if (BattleManager.Instance != null)
             {

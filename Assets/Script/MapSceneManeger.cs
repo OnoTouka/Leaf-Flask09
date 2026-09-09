@@ -88,6 +88,12 @@ public class MapSceneManeger : MonoBehaviour,
     public void OnPointerDown(PointerEventData eventData)
     {
         _root.localScale = defaultScale * pressScale;
+
+        // クリックSE
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySE("Select");
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -95,6 +101,7 @@ public class MapSceneManeger : MonoBehaviour,
         _root.localScale = isHover
             ? defaultScale * hoverScale
             : defaultScale;
+
 
         switch (buttonAction)
         {

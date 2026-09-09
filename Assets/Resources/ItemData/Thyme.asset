@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemID: 9
   itemName: "\u30BF\u30A4\u30E0"
-  description: "\u3042\u3042\u3042\u3042"
+  description: "\u723D\u3084\u304B\u306A\u82B3\u9999\u3068\u307B\u308D\u82E6\u3055\u3092\u6301\u3064\u4EE3\u8868\u7684\u306A\u30CF\u30FC\u30D6\u3002"
   iconPrefab: {fileID: 3561545600343347456, guid: fc387fb1010688a47bc09c175cfc53ac, type: 3}
   illustrationPrefab: {fileID: 6606254417808760627, guid: cf9f4ab1ee0921a40991897bee0ea75f, type: 3}
   minAmount: 1
   maxAmount: 3
+  minDepth: 0
+  maxDepth: 10

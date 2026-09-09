@@ -31,4 +31,16 @@ public class ItemData : ScriptableObject
 
     [Min(1)]
     public int maxAmount = 3;
+
+
+    // =====================================================
+    // 獲得可能な探索深度
+    // =====================================================
+
+    [Header("獲得可能な探索深度")]
+    [Min(0)]
+    public int minDepth = 0;
+
+    [Min(0)]
+    public int maxDepth = 10;
 }

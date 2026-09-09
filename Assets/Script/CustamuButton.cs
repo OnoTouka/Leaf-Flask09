@@ -1,8 +1,8 @@
-using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class CustamuButton : MonoBehaviour,
     IPointerEnterHandler,
@@ -10,16 +10,13 @@ public class CustamuButton : MonoBehaviour,
     IPointerDownHandler,
     IPointerUpHandler
 {
-    [Header("ボタンのRoot")]
+    [Header("見た目")]
     [SerializeField]
     private Transform _root;
 
-    [Header("押したときに消すFrame")]
     [SerializeField]
     private GameObject _FreamePrefub;
 
-
-    [Header("ボタンアニメーション")]
     [SerializeField]
     private float hoverScale = 1.2f;
 
@@ -29,12 +26,36 @@ public class CustamuButton : MonoBehaviour,
 
     [Header("サウンド")]
     [SerializeField]
-    private AudioClip onClickSeAudioClip;
+    private string onClickSeID = "Select";
+
+
+    [Header("ボタンアクション")]
+    [SerializeField]
+    private ButtonAction buttonAction = ButtonAction.None;
 
     [SerializeField]
-    private AudioSource audioSource;
+    private string sceneName;
 
-    // ボタンの動作
+
+    [Header("ダイアログ")]
+    [SerializeField]
+    private GameObject dialog;
+
+    [SerializeField]
+    private Vector3 dialogStartScale = Vector3.zero;
+
+    [SerializeField]
+    private float dialogAnimationTime = 0.2f;
+
+
+    private Vector3 defaultScale;
+
+    private bool isHover;
+    private bool isPressed;
+
+    private Coroutine dialogCoroutine;
+
+
     public enum ButtonAction
     {
         None,
@@ -45,60 +66,33 @@ public class CustamuButton : MonoBehaviour,
         Exit
     }
 
-    [SerializeField]
-    private ButtonAction buttonAction;
 
-    // シーン移動
-    [SerializeField]
-    private string sceneName;
-
-    // ダイアログ
-    [SerializeField]
-    private GameObject dialog;
-
-    [Header("ダイアログアニメーション")]
-    [SerializeField]
-    private float dialogStartScale = 0.1f;
-
-    [SerializeField]
-    private float dialogAnimationTime = 0.2f;
-
-    private Vector3 defaultScale;
-
-    private bool isHover;
-
-    private Coroutine dialogCoroutine;
-
-    // Start
     private void Start()
     {
         if (_root != null)
         {
-            defaultScale =
-                _root.localScale;
+            defaultScale = _root.localScale;
         }
 
-        // OpenDialogボタンの場合
-        // ダイアログだけ最初非表示
-        if (buttonAction ==
-            ButtonAction.OpenDialog)
+        // OpenDialogボタンの場合、
+        // 最初はダイアログを非表示にする
+        if (buttonAction == ButtonAction.OpenDialog)
         {
             if (dialog != null)
             {
                 dialog.SetActive(false);
-
-                dialog.transform.localScale =
-                    Vector3.one;
             }
         }
     }
 
+
+    // ==============================
     // Hover
-    public void OnPointerEnter(
-        PointerEventData eventData)
+    // ==============================
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
         isHover = true;
-
 
         if (_root != null)
         {
@@ -107,11 +101,17 @@ public class CustamuButton : MonoBehaviour,
         }
     }
 
-    public void OnPointerExit(
-        PointerEventData eventData)
+
+    public void OnPointerExit(PointerEventData eventData)
     {
         isHover = false;
 
+        // 押している途中なら、
+        // OnPointerUpで処理する
+        if (isPressed)
+        {
+            return;
+        }
 
         if (_root != null)
         {
@@ -120,16 +120,20 @@ public class CustamuButton : MonoBehaviour,
         }
     }
 
-    // Down
-    public void OnPointerDown(
-        PointerEventData eventData)
+
+    // ==============================
+    // Pointer Down
+    // ==============================
+
+    public void OnPointerDown(PointerEventData eventData)
     {
+        isPressed = true;
+
         if (_root != null)
         {
             _root.localScale =
                 defaultScale * pressScale;
         }
-
 
         if (_FreamePrefub != null)
         {
@@ -137,16 +141,53 @@ public class CustamuButton : MonoBehaviour,
         }
     }
 
-    // Up
-    public void OnPointerUp(
-        PointerEventData eventData)
+
+    // ==============================
+    // Pointer Up
+    // ==============================
+
+    public void OnPointerUp(PointerEventData eventData)
     {
+        // 押されていなければ何もしない
+        if (!isPressed)
+        {
+            return;
+        }
+
+        isPressed = false;
+
+
+        // ==================================
+        // ボタンの外で離した場合
+        // ==================================
+
+        if (!isHover)
+        {
+            if (_root != null)
+            {
+                _root.localScale =
+                    defaultScale;
+            }
+
+            if (_FreamePrefub != null)
+            {
+                _FreamePrefub.SetActive(true);
+            }
+
+            // クリック不成立なので
+            // SEもアクションも実行しない
+            return;
+        }
+
+
+        // ==================================
+        // ボタンの上で離した場合
+        // ==================================
+
         if (_root != null)
         {
             _root.localScale =
-                isHover
-                ? defaultScale * hoverScale
-                : defaultScale;
+                defaultScale * hoverScale;
         }
 
         if (_FreamePrefub != null)
@@ -154,35 +195,83 @@ public class CustamuButton : MonoBehaviour,
             _FreamePrefub.SetActive(true);
         }
 
-        // サウンド
-        if (audioSource != null &&
-            onClickSeAudioClip != null)
+
+        // ==================================
+        // クリック成立
+        // ==================================
+
+        // AudioManagerからSEを再生
+        if (AudioManager.Instance != null)
         {
-            audioSource.PlayOneShot(
-                onClickSeAudioClip
-            );
+            if (!string.IsNullOrEmpty(onClickSeID))
+            {
+                AudioManager.Instance.PlaySE(onClickSeID);
+            }
         }
 
-        // ボタン処理
+
+        // 元のボタンアクションを実行
+        ExecuteButtonAction();
+    }
+
+
+    // ==============================
+    // ボタンアクション
+    // ==============================
+
+    private void ExecuteButtonAction()
+    {
         switch (buttonAction)
         {
-            case ButtonAction.SceneChange:
-
-                SceneManager.LoadScene(
-                    sceneName
-                );
+            case ButtonAction.None:
 
                 break;
+
+
+            case ButtonAction.SceneChange:
+
+                if (string.IsNullOrEmpty(sceneName))
+                {
+                    Debug.LogWarning(
+                        "CustamuButton: sceneNameが設定されていません。"
+                    );
+
+                    return;
+                }
+
+                SceneManager.LoadScene(sceneName);
+
+                break;
+
 
             case ButtonAction.StartGame:
 
-                GameManager.Instance.ResetHP();
-                GameManager.Instance.ResetSP();
-                SceneManager.LoadScene(
-                    sceneName
-                );
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.StartGame();
+                }
+
+
+                if (ItemList.GetInstance() != null)
+                {
+                    ItemList.GetInstance()
+                        .ClearGameObtainedItems();
+                }
+
+
+                if (string.IsNullOrEmpty(sceneName))
+                {
+                    Debug.LogWarning(
+                        "CustamuButton: sceneNameが設定されていません。"
+                    );
+
+                    return;
+                }
+
+                SceneManager.LoadScene(sceneName);
 
                 break;
+
 
             case ButtonAction.OpenDialog:
 
@@ -190,112 +279,121 @@ public class CustamuButton : MonoBehaviour,
 
                 break;
 
+
             case ButtonAction.CloseDialog:
 
                 CloseDialog();
 
                 break;
 
-            case ButtonAction.Exit:
-#if UNITY_EDITOR
-                EditorApplication.isPlaying = false;
-#else
-    Application.Quit();
-#endif
-                break;
 
-            case ButtonAction.None:
+            case ButtonAction.Exit:
+
+#if UNITY_EDITOR
+
+                EditorApplication.isPlaying = false;
+
+#else
+
+                Application.Quit();
+
+#endif
 
                 break;
         }
     }
 
-    // ダイアログを開く
+
+    // ==============================
+    // Dialog Open
+    // ==============================
+
     private void OpenDialog()
     {
         if (dialog == null)
         {
-            Debug.LogWarning(
-                "Dialogが設定されていません"
-            );
-
             return;
         }
 
-        // 現在のアニメーションを停止
+
         if (dialogCoroutine != null)
         {
-            StopCoroutine(
-                dialogCoroutine
-            );
-
-            dialogCoroutine = null;
+            StopCoroutine(dialogCoroutine);
         }
 
-        // ダイアログを表示
+
         dialog.SetActive(true);
 
-        // 必ず小さい状態から開始
         dialog.transform.localScale =
-            Vector3.one *
             dialogStartScale;
 
-        // 開くアニメーション
+
         dialogCoroutine =
             StartCoroutine(
                 OpenDialogAnimation()
             );
     }
 
-    // 開くアニメーション
+
     private IEnumerator OpenDialogAnimation()
     {
-        Transform target =
-            dialog.transform;
-
         Vector3 startScale =
-            Vector3.one *
             dialogStartScale;
 
         Vector3 endScale =
             Vector3.one;
 
+
         float time = 0f;
 
-        while (time <
-               dialogAnimationTime)
+
+        while (time < dialogAnimationTime)
         {
             time += Time.deltaTime;
 
+
             float t =
-                time /
-                dialogAnimationTime;
+                Mathf.Clamp01(
+                    time / dialogAnimationTime
+                );
 
+
+            // SmoothStep
             t =
-                Mathf.SmoothStep(
-                    0f,
-                    1f,
-                    t
-                );
+                t * t *
+                (3f - 2f * t);
 
-            target.localScale =
-                Vector3.Lerp(
-                    startScale,
-                    endScale,
-                    t
-                );
+
+            if (dialog != null)
+            {
+                dialog.transform.localScale =
+                    Vector3.Lerp(
+                        startScale,
+                        endScale,
+                        t
+                    );
+            }
+
 
             yield return null;
         }
 
-        // 最終状態
-        target.localScale =
-            Vector3.one;
+
+        if (dialog != null)
+        {
+            dialog.transform.localScale =
+                endScale;
+        }
+
 
         dialogCoroutine = null;
     }
 
-    // ダイアログを閉じる
+
+    // ==============================
+    // Dialog Close
+    // ==============================
+
     private void CloseDialog()
     {
         if (dialog == null)
@@ -303,74 +401,75 @@ public class CustamuButton : MonoBehaviour,
             return;
         }
 
-        // 現在のアニメーションを停止
+
         if (dialogCoroutine != null)
         {
-            StopCoroutine(
-                dialogCoroutine
-            );
-
-            dialogCoroutine = null;
+            StopCoroutine(dialogCoroutine);
         }
 
-        // 閉じるアニメーション
+
         dialogCoroutine =
             StartCoroutine(
                 CloseDialogAnimation()
             );
     }
 
-    // 閉じるアニメーション
+
     private IEnumerator CloseDialogAnimation()
     {
-        Transform target =
-            dialog.transform;
-
         Vector3 startScale =
-            target.localScale;
+            dialog != null
+                ? dialog.transform.localScale
+                : Vector3.one;
+
 
         Vector3 endScale =
-            Vector3.one *
             dialogStartScale;
+
 
         float time = 0f;
 
-        while (time <
-               dialogAnimationTime)
+
+        while (time < dialogAnimationTime)
         {
             time += Time.deltaTime;
 
+
             float t =
-                time /
-                dialogAnimationTime;
+                Mathf.Clamp01(
+                    time / dialogAnimationTime
+                );
 
+
+            // SmoothStep
             t =
-                Mathf.SmoothStep(
-                    0f,
-                    1f,
-                    t
-                );
+                t * t *
+                (3f - 2f * t);
 
-            target.localScale =
-                Vector3.Lerp(
-                    startScale,
-                    endScale,
-                    t
-                );
+
+            if (dialog != null)
+            {
+                dialog.transform.localScale =
+                    Vector3.Lerp(
+                        startScale,
+                        endScale,
+                        t
+                    );
+            }
+
 
             yield return null;
         }
 
-        // 完全に小さくする
-        target.localScale =
-            endScale;
 
-        // 非表示
-        dialog.SetActive(false);
+        if (dialog != null)
+        {
+            dialog.transform.localScale =
+                endScale;
 
-        // 次回開くために元のサイズへ戻す
-        target.localScale =
-            Vector3.one;
+            dialog.SetActive(false);
+        }
+
 
         dialogCoroutine = null;
     }
